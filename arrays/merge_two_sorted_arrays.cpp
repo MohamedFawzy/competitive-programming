@@ -32,15 +32,44 @@ void merge(int arr1[], int arr2[], int m , int k, int result[], int n)
 
 void test_merge_sorted_arrays()
 {
-  int a[5] = {1, 10, 100, 1000, 1001};
-  int b[3] = {2, 4, 150};
-  int c[8];
-  merge(a,b, 5, 3, c, 8);
 
-  for(int i=0; i<8; i++){
-    cout << c[i] << "\n";
+  for(int test=0; test<1000; test++){
+    cout << "Test " << test + 1 << "\n" << flush;
+    int k = 1 + rand() % 10;
+    int m = 1 + rand() % 10;
+    int n = k + m;
+
+    int a[k];
+    int b[m];
+    int c[n];
+    int tmp[n];
+
+    for(int i=0; i < k; i++){
+      a[i] = rand() % 100;
+
+    }
+
+    sort(a, a+k);
+
+    for(int i=0; i < m; i++){
+      b[i] = rand() % 100;
+    }
+    sort(b, b+m);
+    // merge two arrays to new one array and use this for comparing the result from actual algorithm response
+    copy(a, a+k, tmp);
+    copy(b, b+m, tmp+k);
+    sort(tmp , tmp+n);
+    // for(int i=0; i<n; i++){
+    //   cout << "tmp val "<< tmp[i] << "\n";
+    // }
+
+    merge(a, b, k, m, c, n);
+
+    for(int i=0; i<n; i++){
+      assert(c[i] == tmp[i]);
+    }
   }
-
+  cout << "Prefect !";
 }
 
 int main()
