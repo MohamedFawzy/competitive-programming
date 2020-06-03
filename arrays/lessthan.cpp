@@ -24,10 +24,10 @@ bool first_string_less_than_2nd(string a, string b)
 
 int main()
 {
-  string a = "aa";
-  string b = "aaaaa";
-  bool answer = b < a;
-  bool myAnswer = first_string_less_than_2nd(b, a);
+  string a = "ab";
+  string b = "ca";
+  bool answer = a < b;
+  bool myAnswer = first_string_less_than_2nd(a, b);
   cout << answer << "\n";
   cout << myAnswer << "\n";
   return 0;
