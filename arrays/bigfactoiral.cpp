@@ -1,6 +1,6 @@
 #include <iostream>
 using namespace std;
-#define MAX 500
+#define MAX 50000
 //https://www.geeksforgeeks.org/factorial-large-number/
 
 void factorial(int n);
@@ -45,6 +45,6 @@ int multiply(int x, int ar[], int ar_size)
 
 int main()
 {
-  factorial(100);
+  factorial(1000);
   return 0;
 }
