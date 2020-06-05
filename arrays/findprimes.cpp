@@ -13,7 +13,9 @@ void primes_in_range(int n)
   //   cout << arr[i] << endl<<flush;
   // }
 
-  for(int i=2; i<n; i++){
+  int k = sqrt(n);
+
+  for(int i=2; i<k; i++){
     if(arr[i]){
       for(int j=i+1; j<n; j++){
         if(j%i==0){
@@ -24,7 +26,7 @@ void primes_in_range(int n)
   }
 
   for(int i=0; i<n; i++){
-    cout << arr[i] << "\t";
+    cout << i << " : "<<  arr[i] << "\t";
   }
 
 }
