@@ -35,26 +35,24 @@ void cycles(int arr[], int size)
   // the result to detect if the element and index matched then we have match
   **/
   bool visited[size];
-  fill_n(visited, size, 0);
-  auto cnt = 1;
-  for(auto i=0; i<size; i++){
-    // loop through unvisited items only
-    if(visited[i]==0){
-      // create a tmp var
-      int k = i;
-      // print first element only here
-      cout << k << " --> " << arr[k]<<endl;
-      // set visited to true
-      visited[k] = 1;
+  fill_n(visited, size, false);
 
-      k = arr[k];
+  // loop through elements
+  int counter = 1;
+
+  for(auto i=0; i<size; i++){
+    if(!visited[i]){
+      int k = i;
+      cout << k << " -> " << arr[k]<<endl;
+      k = arr[k]; // change from index to value of the index
+      visited[k] = true;
       while(k != i){
-        cout << k << " --> " << arr[k]<<endl;
+        cout << k << " -> " << arr[k] << endl;
         k = arr[k];
-        visited[k]=1;
+        visited[k]=true;
       }
-      cout << "End cycle " << cnt << endl;
-      cnt++;
+      cout << "End of cycle: " << counter<<endl;
+      counter++;
     }
   }
 
@@ -62,9 +60,11 @@ void cycles(int arr[], int size)
 
 int main()
 {
-  // const int SIZE = 4;
-  // int arr[] = {1,2,3,0};
-  // cycles(arr, SIZE);
+  const int SIZE = 4;
+  int arr[] = {1,2,3,0};
+  cycles(arr, SIZE);
+
+  cout << "test2========\n";
 
   const int size1 = 6;
   int arr1[] = {2,0,1,4,3,5};
