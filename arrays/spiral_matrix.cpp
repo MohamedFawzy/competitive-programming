@@ -15,18 +15,19 @@ void spiral(int arr[N][N], int N)
     /* code */
     for(int s=0; s<4 && cnt < N*N; s++){
       int m = steps-1; // N-1 steps per direction
-      if(s==3) --m; // except last direction N-2
-
-      for(int i=0; i<m && cnt << N*N; i++){
+      if(s==3) m--; // except last direction N-2
+      //cout << "cnt "<< cnt << " N*N " << N*N << "\n\n\n";
+      for(int i=0; i < m && cnt < N*N; i++){
+          //cout << "m " << m<<endl;
           cout << arr[r][c]<< " ";
-          ++cnt, r += dir_r[dir], c += dir_c[dir]; // move step
+          cnt++, r += dir_r[dir], c += dir_c[dir]; // move step
       }
 
       dir = (dir+1)%4; // change direction , wrapping
     }
     cout << arr[r][c] << " "; // special handling for last element
-    ++cnt, r += dir_r[dir], c += dir_c[dir];
-    steps -= 2;
+    cnt++, r += dir_r[dir], c += dir_c[dir];
+    steps -= 2; // 6 => 4 => 2 => 0
   }
   cout << "\n";
 }
@@ -44,7 +45,7 @@ int main()
 
   spiral(arr, 1);
   spiral(arr, 2);
-  //spiral(arr, 3);
+  spiral(arr, 3);
   //spiral(arr, 4);
   //spiral(arr, 5);
 
