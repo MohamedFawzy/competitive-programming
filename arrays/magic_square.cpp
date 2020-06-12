@@ -2,9 +2,9 @@
 using namespace std;
 const int N=3;
 
-enum dir { DOWN=0, RIGHT, UP, LEFT, UP_LEFT, DOWN_RIGHT, UP_RIGHT, DOWN_LEFT };
-int dir_r[] = {1, 0, -1, 0, -1, 1, -1, 1};
-int dir_c[] = {0, 1, 0, -1, -1, 1, 1, -1};
+enum dir      { DOWN=0, RIGHT, UP, LEFT, UP_LEFT, DOWN_RIGHT, UP_RIGHT, DOWN_LEFT };
+int dir_r[] = {1,        0,    -1,  0,    -1,       1,            -1,       1};
+int dir_c[] = {0,        1,     0,  -1,   -1,        1,             1,     -1};
 
 // optimized version using matrix directions
 int sumWithDir(int r, int c, int dir, int steps, int square[N][N])
