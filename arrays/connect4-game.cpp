@@ -1,148 +1,242 @@
+//Michael Estes
+//Connect 4 Console C++
 #include <iostream>
-#include <string>
-#include <iomanip>
 using namespace std;
-/**
-write program to simulate 2 players
-- Turn by turn, ask player to put his item
-  - validate it , e.g column is 6 items, column may be full.
-- print the board after each turn
-- check for winner after each turn (revise rules)
-- which player starts ? do that randomly using rand() function , let players enter their names/color
-**/
-enum dir      { DOWN=0, RIGHT, UP, LEFT, UP_LEFT, DOWN_RIGHT, UP_RIGHT, DOWN_LEFT };
-int dir_r[] = {1,        0,    -1,  0,    -1,       1,            -1,       1};
-int dir_c[] = {0,        1,     0,  -1,   -1,        1,             1,     -1};
 
-// board size N*N
-const int N=6;
-void displayBoard(int arr[N][N]);
-void addItem(int arr[N][N], int item);
-int sumWithDir(int r, int c, int dir, int steps, int arr[N][N]);
-void player_wins(int arr[N][N], int sum_player1, int sum_player2);
-
-void player_wins(int arr[N][N], int sum_player1, int sum_player2)
+struct playerInfo
 {
-  for(int i=0; i<N; i++){
-    int sum = sumWithDir(i, 0, RIGHT, 4, arr);
-    cout << "Sum of right:\t" sum<<"\n";
-    if(sum ==4){
-      sum_player1 += 1;
-    }else if(sumWithDir(0, i, DOWN, 4, arr)==8){
-      sum_player2 += 1;
-    }
-  }
+	char playerName[81];
+	char playerID;
+};
 
-
-  if(sumWithDir(0,0, DOWN_RIGHT, 4, arr)==4){
-    sum_player1 +=1;
-  }else if(sumWithDir(0, 0, DOWN_RIGHT, 4, arr)==8){
-    sum_player2 += 1;
-  }
-  if(sumWithDir(0, N-1, DOWN_LEFT, 4, arr)==4){
-    sum_player1 += 1;
-  }else if(sumWithDir(0, N-1, DOWN_LEFT, 4, arr)==8){
-    sum_player2 += 1 ;
-  }
-
-}
-// optimized version using matrix directions
-int sumWithDir(int r, int c, int dir, int steps, int arr[N][N])
-{
-
-  int sum =0;
-  for(int s=0; s<steps; s++){
-    sum += arr[r][c];
-    r += dir_r[dir];
-    c += dir_c[dir];
-  }
-
-  return sum;
-}
-
-void addItem(int arr[N][N], int color)
-{
-    int row_idx, column_idx;
-    cout << "Please enter your item in which index should be 0...5\n";
-    cout << "Please enter row index\n";
-    cin >> row_idx;
-    cout << "please enter column index\n";
-    cin >> column_idx;
-    while(arr[row_idx][column_idx] != 0){
-      cout << "please choice a different index already taken\n";
-      cout << "Please enter row index\n";
-      cin >> row_idx;
-      cout << "please enter column index\n";
-      cin >> column_idx;
-    }
-    arr[row_idx][column_idx] = color;
-}
-
-
-void displayBoard(int arr[N][N])
-{
-  for(int r=0; r<N; r++){
-    cout << "------------\n";
-    for(int c=0; c<N; c++){
-      // print row by row for the matrix
-      cout << arr[r][c] << "|";
-    }
-    cout << "\n";
-  }
-  cout << "------------\n";
-
-}
+int PlayerDrop( char board[][10], playerInfo activePlayer );
+void CheckBellow ( char board[][10], playerInfo activePlayer, int dropChoice );
+void DisplayBoard ( char board[][10] );
+int CheckFour ( char board[][10], playerInfo activePlayer );
+int FullBoard( char board[][10] );
+void PlayerWin ( playerInfo activePlayer );
+int restart ( char board[][10] );
 
 int main()
 {
-  string player1, player2;
-  int player1_color, player2_color;
-  cout << "Welcome to connect 4 game \n";
+	playerInfo playerOne, playerTwo;
+	char board[9][10];
+	int trueWidth = 7;
+	int trueLength = 6;
+	int dropChoice, win, full, again;
+
+	cout << "Let's Play Connect 4" << endl << endl;
+	cout << "Player One please enter your name: ";
+	cin  >> playerOne.playerName;
+	playerOne.playerID = 'X';
+	cout << "Player Two please enter your name: ";
+	cin  >> playerTwo.playerName;
+	playerTwo.playerID = 'O';
+
+	full = 0;
+	win = 0;
+	again = 0;
+	DisplayBoard( board );
+	do
+	{
+		dropChoice = PlayerDrop( board, playerOne );
+		CheckBellow( board, playerOne, dropChoice );
+		DisplayBoard( board );
+		win = CheckFour( board, playerOne );
+		if ( win == 1 )
+		{
+			PlayerWin(playerOne);
+			again = restart(board);
+			if (again == 2)
+			{
+				break;
+			}
+		}
+
+		dropChoice = PlayerDrop( board, playerTwo );
+		CheckBellow( board, playerTwo, dropChoice );
+		DisplayBoard( board );
+		win = CheckFour( board, playerTwo );
+		if ( win == 1 )
+		{
+			PlayerWin(playerTwo);
+			again = restart(board);
+			if (again == 2)
+			{
+				break;
+			}
+		}
+		full = FullBoard( board );
+		if ( full == 7 )
+		{
+			cout << "The board is full, it is a draw!" << endl;
+			again = restart(board);
+		}
+
+	}while ( again != 2 );
 
 
-  //first player name
-  cout << "Enter first player name\n";
-  cin >> player1;
-  cout << "Enter first player color e.g (1)blue , (2)red\n";
-  cin >> player1_color;
-  // second player name
-  cout << "Enter second player name\n";
-  cin >> player2;
-  cout << "Enter second player color e.g (1)blue, (2)red\n";
-  cin >> player2_color;
 
-  int arr[N][N] = {
-    {0,0,0,0,0,0},
-    {0,0,0,0,0,0},
-    {0,0,0,0,0,0},
-    {0,0,0,0,0,0},
-    {0,0,0,0,0,0},
-    {0,0,0,0,0,0}
-  };
-  cout << "Init empty board\n";
-  // display board
-  displayBoard(arr);
-  cout << "\n\n\n";
+return 0;
+}
 
-  int cnt =0;
-  int player1_wins =  0;
-  int player2_wins = 0;
+int PlayerDrop( char board[][10], playerInfo activePlayer )
+{
+	int dropChoice;
+	do
+	{
+		cout << activePlayer.playerName << "'s Turn ";
+		cout << "Please enter a number between 1 and 7: ";
+		cin  >> dropChoice;
 
-  while(cnt < N*N){
-    // player 1 starts
-    cout << "Player 1 move\n";
-    addItem(arr,player1_color);
-    displayBoard(arr);
-    // player 2 starts
-    cout << "Player 2 move\n";
-    addItem(arr, player2_color);
-    displayBoard(arr);
-    // sum the player values
-    player_wins(arr, player1_wins, player2_wins);
-    cout << "player1 wins >>>>>>>\t" << player1_wins<<"\n\n";
-    cout << "player2 wins >>>>>>>\t" << player2_wins<<"\n\n";
-    cnt++;
-  }
-  cout << "Done\n";
-  return 0;
+		while ( board[1][dropChoice] == 'X' || board[1][dropChoice] == 'O' )
+		{
+			cout << "That row is full, please enter a new row: ";
+			cin  >> dropChoice;
+		}
+
+	}while ( dropChoice < 1 || dropChoice > 7 );
+
+return dropChoice;
+}
+
+void CheckBellow ( char board[][10], playerInfo activePlayer, int dropChoice )
+{
+	int length, turn;
+	length = 6;
+	turn = 0;
+
+	do
+	{
+		if ( board[length][dropChoice] != 'X' && board[length][dropChoice] != 'O' )
+		{
+			board[length][dropChoice] = activePlayer.playerID;
+			turn = 1;
+		}
+		else
+		--length;
+	}while (  turn != 1 );
+
+
+}
+
+void DisplayBoard ( char board[][10] )
+{
+	int rows = 6, columns = 7, i, ix;
+
+	for(i = 1; i <= rows; i++)
+	{
+		cout << "|";
+		for(ix = 1; ix <= columns; ix++)
+		{
+			if(board[i][ix] != 'X' && board[i][ix] != 'O')
+				board[i][ix] = '*';
+
+			cout << board[i][ix];
+
+		}
+
+		cout << "|" << endl;
+	}
+
+}
+
+int CheckFour ( char board[][10], playerInfo activePlayer )
+{
+	char XO;
+	int win;
+
+	XO = activePlayer.playerID;
+	win = 0;
+
+	for( int i = 8; i >= 1; --i )
+	{
+
+		for( int ix = 9; ix >= 1; --ix )
+		{
+
+			if( board[i][ix] == XO     &&
+				board[i-1][ix-1] == XO &&
+				board[i-2][ix-2] == XO &&
+				board[i-3][ix-3] == XO )
+			{
+				win = 1;
+			}
+
+
+			if( board[i][ix] == XO   &&
+				board[i][ix-1] == XO &&
+				board[i][ix-2] == XO &&
+				board[i][ix-3] == XO )
+			{
+				win = 1;
+			}
+
+			if( board[i][ix] == XO   &&
+				board[i-1][ix] == XO &&
+				board[i-2][ix] == XO &&
+				board[i-3][ix] == XO )
+			{
+				win = 1;
+			}
+
+			if( board[i][ix] == XO     &&
+				board[i-1][ix+1] == XO &&
+				board[i-2][ix+2] == XO &&
+				board[i-3][ix+3] == XO )
+			{
+				win = 1;
+			}
+
+			if ( board[i][ix] == XO   &&
+				 board[i][ix+1] == XO &&
+				 board[i][ix+2] == XO &&
+				 board[i][ix+3] == XO )
+			{
+				win = 1;
+			}
+		}
+
+	}
+
+return win;
+}
+
+int FullBoard( char board[][10] )
+{
+	int full;
+	full = 0;
+	for ( int i = 1; i <= 7; ++i )
+	{
+		if ( board[1][i] != '*' )
+			++full;
+	}
+
+return full;
+}
+
+void PlayerWin ( playerInfo activePlayer )
+{
+	cout << endl << activePlayer.playerName << " Connected Four, You Win!" << endl;
+}
+
+int restart ( char board[][10] )
+{
+	int restart;
+
+	cout << "Would you like to restart? Yes(1) No(2): ";
+	cin  >> restart;
+	if ( restart == 1 )
+	{
+		for(int i = 1; i <= 6; i++)
+		{
+			for(int ix = 1; ix <= 7; ix++)
+			{
+				board[i][ix] = '*';
+			}
+		}
+	}
+	else
+		cout << "Goodbye!" << endl;
+return restart;
 }
