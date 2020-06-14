@@ -185,6 +185,8 @@ void vectorMainpulation()
 
   // accumulate array from current index
   partial_sum(all(v2), v1.begin());
+  // rotate
+  rotate(v2.begin(), v2.begin()+1, v2.end());
 
 }
 
