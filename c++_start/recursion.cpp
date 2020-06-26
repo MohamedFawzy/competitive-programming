@@ -51,6 +51,42 @@ int f3n_1(int n)
   return 1 + f3n_1(3*n+1);
 }
 
+void printNumber(int n)
+{
+  if(n){
+    printNumber(n/10);
+    cout << n%10;
+  }
+}
+
+void printNumberBits(int n)
+{
+  if(n){
+    printNumberBits(n/2);
+    cout << n%2;
+  }
+}
+
+void perm(int i, int n, int vis[], int curr[])
+{
+  if(i==n){
+    for(int j=0; j<n;j++){
+      cout << curr[j];
+    }
+    cout <<"\n";
+    return;
+  }
+
+  for(int j=0; j<n; j++){
+    if(!vis[j]){
+      vis[j] = 1;
+      curr[i] = j;
+      perm(i+1, n, vis, curr);
+      vis[j] = 0;
+    }
+  }
+}
+
 int main()
 {
   sayIamTopCoder(10);
@@ -60,5 +96,11 @@ int main()
   cout << "\n\n\n\n";
   trianglerev(5);
   f3n_1(22);
+  printNumber(214);
+  cout <<"\n";
+  printNumberBits(214);
+  int vis[100];
+  int curr[100];
+  perm(0, 5, vis, curr);
   return 0;
 }
