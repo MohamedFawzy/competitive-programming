@@ -1,4 +1,5 @@
 #include <iostream>
+#define MAX 50000
 using namespace std;
 
 void sayIamTopCoder(int cnt)
@@ -87,6 +88,26 @@ void perm(int i, int n, int vis[], int curr[])
   }
 }
 
+int savedAnswers[MAX];
+
+void fill_arr()
+{
+  for(int i=0; i<MAX; i++){
+    savedAnswers[i]= -1;
+  }
+}
+
+int fib(int n)
+{
+  if(n<=1){
+    return 1;
+  }
+
+  if(savedAnswers[n] != -1){
+      return savedAnswers[n];
+  }
+  return savedAnswers[n] = fib(n-2) + fib(n-1);
+}
 int main()
 {
   sayIamTopCoder(10);
@@ -102,5 +123,9 @@ int main()
   int vis[100];
   int curr[100];
   perm(0, 5, vis, curr);
+  cout <<"\nfib\n";
+  fill_arr();
+  int fib_result = fib(5);
+  cout << fib_result << endl;
   return 0;
 }
